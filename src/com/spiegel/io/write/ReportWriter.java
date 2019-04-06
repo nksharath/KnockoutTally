@@ -72,12 +72,12 @@ public class ReportWriter
             if (tallyEntry instanceof TalliedEntry)
             {
                 final Row rowEntry = talliedSheet.createRow(talliedRowIndex++);
-                fillRow(tallyEntry, rowEntry, workbook, talliedSheet);
+                fillRow(tallyEntry, rowEntry);
             }
             else if (tallyEntry instanceof UntalliedEntry)
             {
                 final Row rowEntry = unTalliedSheet.createRow(unTalliedRowIndex++);
-                fillRow(tallyEntry, rowEntry, workbook, unTalliedSheet);
+                fillRow(tallyEntry, rowEntry);
             }
         }
     }
@@ -98,34 +98,25 @@ public class ReportWriter
         }
     }
 
-    private void fillRow(final ITallyEntry tallyEntry, final Row row, final HSSFWorkbook workbook, final HSSFSheet sheet)
+    private void fillRow(final ITallyEntry tallyEntry, final Row row)
     {
         int columnIndex = 0;
-
-        CellStyle cs = workbook.createCellStyle();
-        cs.setWrapText(true);
-        row.setHeightInPoints((10 * sheet.getDefaultRowHeightInPoints()));
 
 
         Cell cell = row.createCell(columnIndex++);
         cell.setCellValue(cellTextSupplier.get(tallyEntry.getRecieptEntry()));
-        cell.setCellStyle(cs);
-        sheet.autoSizeColumn(columnIndex);
+
 
         cell = row.createCell(columnIndex++);
         cell.setCellValue(cellTextSupplier.get(tallyEntry.getBangaloreEntry()));
-        cell.setCellStyle(cs);
-        sheet.autoSizeColumn(columnIndex);
+
 
         cell = row.createCell(columnIndex++);
         cell.setCellValue(cellTextSupplier.get(tallyEntry.getHassanEntry()));
-        cell.setCellStyle(cs);
-        sheet.autoSizeColumn(columnIndex);
+
 
         cell = row.createCell(columnIndex++);
         cell.setCellValue(cellTextSupplier.get(tallyEntry.getBankChargeEntry()));
-        cell.setCellStyle(cs);
-        sheet.autoSizeColumn(columnIndex);
     }
 
     private final CellTextSupplier cellTextSupplier;
