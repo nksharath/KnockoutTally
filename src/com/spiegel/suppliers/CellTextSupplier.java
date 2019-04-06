@@ -1,5 +1,6 @@
 package com.spiegel.suppliers;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 import com.spiegel.interfaces.IRecordEntry;
@@ -23,6 +24,33 @@ public class CellTextSupplier
         this.cellBankChargesTextSupplier = cellBankChargesTextSupplier;
     }
 
+    public List<String> getExcelFriendly(final List<IRecordEntry> recordEntryList)
+    {
+        final List<String> entryList = Lists.newArrayList();
+
+        for (final IRecordEntry recordEntry : recordEntryList)
+        {
+            if (recordEntry instanceof RecieptEntry)
+            {
+                entryList.addAll(cellRecieptTextSupplier.getExcelFriendly(recordEntry));
+            }
+            else if (recordEntry instanceof BangaloreEntry)
+            {
+                entryList.addAll(cellBangaloreTextSupplier.getExcelFriendly(recordEntry));
+            }
+            else if (recordEntry instanceof HassanEntry)
+            {
+                entryList.addAll(cellHassanTextSupplier.getExcelFriendly(recordEntry));
+            }
+            else if (recordEntry instanceof BankChargeEntry)
+            {
+                entryList.addAll(cellBankChargesTextSupplier.getExcelFriendly(recordEntry));
+            }
+        }
+
+        return entryList;
+    }
+
     public String get(final List<IRecordEntry> recordEntryList)
     {
         final StringBuilder stringBuilder = new StringBuilder();
@@ -30,32 +58,23 @@ public class CellTextSupplier
         {
             if (recordEntry instanceof RecieptEntry)
             {
-                //stringBuilder.append(RECIEPT_ENTRY);
                 stringBuilder.append(cellRecieptTextSupplier.get(recordEntry));
             }
             else if (recordEntry instanceof BangaloreEntry)
             {
-                //stringBuilder.append(BANGALORE_ENTRY);
                 stringBuilder.append(cellBangaloreTextSupplier.get(recordEntry));
             }
             else if (recordEntry instanceof HassanEntry)
             {
-                //stringBuilder.append(HASSAN_ENTRY);
                 stringBuilder.append(cellHassanTextSupplier.get(recordEntry));
             }
             else if (recordEntry instanceof BankChargeEntry)
             {
-                //stringBuilder.append(BANK_CHARGES_ENTRY);
                 stringBuilder.append(cellBankChargesTextSupplier.get(recordEntry));
             }
         }
         return stringBuilder.toString();
     }
-
-   /* private static String RECIEPT_ENTRY = "****Receipt Entries***\n";
-    private static String BANGALORE_ENTRY = "****Bangalore Entries***\n";
-    private static String HASSAN_ENTRY = "****Hassan Entries***\n";
-    private static String BANK_CHARGES_ENTRY = "****BankCharges Entries***\n";*/
 
     private final CellRecieptTextSupplier cellRecieptTextSupplier;
     private final CellBangaloreTextSupplier cellBangaloreTextSupplier;

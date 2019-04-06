@@ -1,10 +1,23 @@
 package com.spiegel.suppliers;
 
+import com.google.common.collect.Lists;
+
 import com.spiegel.interfaces.IRecordEntry;
 import com.spiegel.pojos.BankChargeEntry;
+import java.util.List;
 
 public class CellBankChargesTextSupplier
 {
+    public List<String> getExcelFriendly(final IRecordEntry recordEntry)
+    {
+        final List<String> entryList = Lists.newArrayList();
+        final BankChargeEntry bankChargeEntry = (BankChargeEntry) recordEntry;
+
+        entryList.add(bankChargeEntry.getVchNo());
+        entryList.add(Double.toString(bankChargeEntry.getDebit()));
+        return entryList;
+    }
+
     public String get(final IRecordEntry recordEntry)
     {
         final BankChargeEntry bankChargeEntry = (BankChargeEntry) recordEntry;
@@ -22,6 +35,7 @@ public class CellBankChargesTextSupplier
 
         stringBuilder.append(AMOUNT);
         stringBuilder.append(bankChargeEntry.getDebit());
+        stringBuilder.append(NEW_LINE);
 
         return stringBuilder.toString();
     }

@@ -24,7 +24,7 @@ public class KnockoutPredicate
         double hassanSum = sumSupplier.get(hassanValueList);
         double bankChargesSum = sumSupplier.get(bankChargesValueList);
 
-        if (Math.abs(recieptSum) == Math.abs(bangaloreSum + hassanSum - bankChargesSum))
+        if (Math.abs((int) recieptSum) == Math.abs((int) (bangaloreSum + hassanSum - bankChargesSum)))
         {
             return true;
         }

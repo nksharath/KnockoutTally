@@ -1,10 +1,23 @@
 package com.spiegel.suppliers;
 
+import com.google.common.collect.Lists;
+
 import com.spiegel.interfaces.IRecordEntry;
 import com.spiegel.pojos.BangaloreEntry;
+import java.util.List;
 
 public class CellBangaloreTextSupplier
 {
+    public List<String> getExcelFriendly(final IRecordEntry recordEntry)
+    {
+        final List<String> entryList = Lists.newArrayList();
+        final BangaloreEntry bangaloreEntry = (BangaloreEntry) recordEntry;
+
+        entryList.add(bangaloreEntry.getVchNo());
+        entryList.add(Double.toString(bangaloreEntry.getCredit()));
+        return entryList;
+    }
+
     public String get(final IRecordEntry recordEntry)
     {
         final BangaloreEntry bangaloreEntry = (BangaloreEntry) recordEntry;
@@ -17,6 +30,7 @@ public class CellBangaloreTextSupplier
 
         stringBuilder.append(AMOUNT);
         stringBuilder.append(bangaloreEntry.getCredit());
+        stringBuilder.append(NEW_LINE);
 
         return stringBuilder.toString();
     }
