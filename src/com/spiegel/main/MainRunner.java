@@ -19,18 +19,13 @@ public class MainRunner
         if (validateFiles())
         {
             Injector injector = Guice.createInjector(new BeanModule());
-            injector.getInstance(MasterController.class).masterRead(args[0]);
+            injector.getInstance(MasterController.class).masterRead(".");
         }
         else
         {
             infoBox("Four Files R.xls, B.xls, H.xls and BC.xls are required to run this program." +
                     " This program will now shutdown", "Required Files " + "To Run Progam Not Found ");
         }
-    }
-
-    public static void infoBox(String infoMessage, String titleBar)
-    {
-        JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
     }
 
     private static boolean validateFiles()
@@ -45,6 +40,11 @@ public class MainRunner
             }
         }
         return true;
+    }
+
+    public static void infoBox(String infoMessage, String titleBar)
+    {
+        JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
     }
 
     private static Set<String> getAllFiles(File curDir)
