@@ -38,6 +38,9 @@ public class BankChargesRowWriter
             cell = rowInternal.createCell(8);
             cell.setCellValue(bankChargeEntry.getDebit());
 
+            cell = rowInternal.createCell(9);
+            cell.setCellValue(bankChargeEntry.getParticulars());
+
             bankChargesTotal += bankChargeEntry.getDebit();
 
         }

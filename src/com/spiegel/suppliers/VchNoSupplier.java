@@ -13,30 +13,12 @@ public class VchNoSupplier
 
         for (final String entry : splitArray)
         {
-            if (containsLetter(entry))
-            {
-                continue;
-            }
-
             vchTokenList.add(entry);
         }
+
         return vchTokenList;
     }
 
-    private boolean containsLetter(final String name)
-    {
-        char[] chars = name.toCharArray();
-
-        for (char c : chars)
-        {
-            if (Character.isLetter(c))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     final static String DELIMITER = "/";
 }

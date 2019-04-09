@@ -51,16 +51,21 @@ public class ReportWriter
         final HSSFSheet talliedSheet = workbook.createSheet("Tallied");
         final HSSFSheet unTalliedSheet = workbook.createSheet("Untallied");
         final HSSFSheet duplicateSheet = workbook.createSheet("Duplicate");
+        // 0=yes, 1=no, 2=cancel
+        int legacySetting = JOptionPane.showConfirmDialog(null, "Do you want Printable Summary Report instead of Excel?");
+        boolean printableReport = (0 == legacySetting) ? true : false;
 
-        writeHeaders(workbook, talliedSheet);
-        writeHeaders(workbook, unTalliedSheet);
-        writeData(workbook, talliedSheet, unTalliedSheet, tallyEntryList);
+        writeHeaders(workbook, talliedSheet, printableReport);
+        writeHeaders(workbook, unTalliedSheet, printableReport);
+        writeData(workbook, talliedSheet, unTalliedSheet, tallyEntryList, printableReport);
         duplicateWriter.writeDuplicateSheet(workbook, duplicateSheet, tallyEntryList);
         close(workbook);
     }
 
-    private void writeHeaders(final HSSFWorkbook workbook, final HSSFSheet hssfSheet)
+    private void writeHeaders(final HSSFWorkbook workbook, final HSSFSheet hssfSheet, final boolean printableReport)
     {
+        final String[] columns = (printableReport == true) ? LEGACY_COLUMNS : COLUMNS;
+
         Font headerFont = workbook.createFont();
         headerFont.setBold(true);
         headerFont.setFontHeightInPoints((short) 14);
@@ -72,10 +77,10 @@ public class ReportWriter
         Row headerRow = hssfSheet.createRow(0);
 
         // Create cells
-        for (int i = 0; i < COLUMNS.length; i++)
+        for (int i = 0; i < columns.length; i++)
         {
             Cell cell = headerRow.createCell(i);
-            cell.setCellValue(COLUMNS[i]);
+            cell.setCellValue(columns[i]);
             cell.setCellStyle(headerCellStyle);
         }
     }
@@ -83,24 +88,24 @@ public class ReportWriter
     private void writeData(final HSSFWorkbook workbook,
                            final HSSFSheet talliedSheet,
                            final HSSFSheet unTalliedSheet,
-                           final List<ITallyEntry> tallyEntryList)
+                           final List<ITallyEntry> tallyEntryList,
+                           final boolean printableReport)
     {
         int talliedRowIndex = 1;
         int unTalliedRowIndex = 1;
-        // 0=yes, 1=no, 2=cancel
-        int legacySetting = JOptionPane.showConfirmDialog(null, "Do you want Printable Summary Report instead of Excel?");
+
 
         for (final ITallyEntry tallyEntry : tallyEntryList)
         {
             if (tallyEntry instanceof TalliedEntry)
             {
                 final Row rowEntry = talliedSheet.createRow(talliedRowIndex);
-                talliedRowIndex = fillRow(tallyEntry, rowEntry, talliedRowIndex, talliedSheet, legacySetting);
+                talliedRowIndex = fillRow(tallyEntry, rowEntry, talliedRowIndex, talliedSheet, printableReport);
             }
             else if (tallyEntry instanceof UntalliedEntry)
             {
                 final Row rowEntry = unTalliedSheet.createRow(unTalliedRowIndex);
-                unTalliedRowIndex = fillRow(tallyEntry, rowEntry, unTalliedRowIndex, unTalliedSheet, legacySetting);
+                unTalliedRowIndex = fillRow(tallyEntry, rowEntry, unTalliedRowIndex, unTalliedSheet, printableReport);
             }
         }
     }
@@ -121,9 +126,9 @@ public class ReportWriter
         }
     }
 
-    private int fillRow(final ITallyEntry tallyEntry, final Row row, int rowIndex, final HSSFSheet sheet, int legacySetting)
+    private int fillRow(final ITallyEntry tallyEntry, final Row row, int rowIndex, final HSSFSheet sheet, boolean printableReport)
     {
-        if (legacySetting == 1)
+        if (!printableReport)
         {
 
             final RowSum recieptRow = recieptRowWriter.fillRow(tallyEntry, row, rowIndex, sheet);
@@ -151,11 +156,11 @@ public class ReportWriter
         }
         else
         {
-            return fillRowLegacy(tallyEntry, row, rowIndex, sheet);
+            return fillRowPrintable(tallyEntry, row, rowIndex, sheet);
         }
     }
 
-    private int fillRowLegacy(final ITallyEntry tallyEntry, final Row row, int rowIndex, final HSSFSheet sheet)
+    private int fillRowPrintable(final ITallyEntry tallyEntry, final Row row, int rowIndex, final HSSFSheet sheet)
     {
         int columnIndex = 0;
         Cell cell = row.createCell(columnIndex++);
@@ -195,5 +200,11 @@ public class ReportWriter
                                              "Hassan Amount",
                                              "BankCharges VchNo",
                                              "BankCharges Amount",
+                                             "BankCharges Particulars",
                                              };
+
+    private static final String[] LEGACY_COLUMNS = {"Receipt",
+                                                    "Bangalore",
+                                                    "Hassan",
+                                                    "Bank Charges"};
 }
