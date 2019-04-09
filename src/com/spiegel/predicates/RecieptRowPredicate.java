@@ -3,6 +3,7 @@ package com.spiegel.predicates;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 
 public class RecieptRowPredicate implements Predicate<Row>
@@ -16,15 +17,22 @@ public class RecieptRowPredicate implements Predicate<Row>
 
         We are not checking if Vch No. if valid : We want to capture the invalids as not tallied
          */
+        if (row.getCell(4).getCellTypeEnum() != CellType.STRING)
+        {
+            return false;
+        }
+
+        if (row.getCell(6).getCellTypeEnum() != CellType.NUMERIC)
+        {
+            return false;
+        }
+
         if (ALLOWED.contains(row.getCell(4).getStringCellValue().toLowerCase()))
         {
 
             if (row.getCell(6).getNumericCellValue() != 0.0D)
             {
-                if (row.getCell(7).getNumericCellValue() == 0.0D)
-                {
-                    return true;
-                }
+                return true;
             }
 
         }

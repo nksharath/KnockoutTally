@@ -2,6 +2,7 @@ package com.spiegel.predicates;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -18,12 +19,13 @@ public class BangaloreRowPredicate implements Predicate<Row>
         We are not checking if Vch No. if valid : We want to capture the invalids as not tallied
          */
 
-        if (CellType.STRING != row.getCell(2).getCellTypeEnum())
+
+        if (!Optional.ofNullable(row).map(rs -> row.getCell(2)).isPresent())
         {
             return false;
         }
 
-        if (CellType.STRING != row.getCell(6).getCellTypeEnum())
+        if (CellType.STRING != row.getCell(2).getCellTypeEnum())
         {
             return false;
         }
@@ -33,6 +35,10 @@ public class BangaloreRowPredicate implements Predicate<Row>
             return false;
         }
 
+        if (CellType.STRING != row.getCell(6).getCellTypeEnum())
+        {
+            return false;
+        }
 
         if (ALLOWED.contains(row.getCell(2).getStringCellValue().toLowerCase()))
         {
@@ -40,10 +46,7 @@ public class BangaloreRowPredicate implements Predicate<Row>
             {
                 if (row.getCell(6).getStringCellValue().toLowerCase().contains(CREDIT))
                 {
-                    if (row.getCell(7).getStringCellValue().isEmpty())
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
         }

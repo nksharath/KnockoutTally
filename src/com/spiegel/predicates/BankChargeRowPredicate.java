@@ -29,16 +29,12 @@ public class BankChargeRowPredicate implements Predicate<Row>
 
             if (row.getCell(6).getNumericCellValue() != 0.0D)
             {
-                if (row.getCell(7).getStringCellValue().isEmpty())
-                {
-                    return true;
-                }
+                return true;
             }
-
         }
 
         return false;
     }
 
-    private final static List<String> ALLOWED = Arrays.asList("receipt");
+    private final static List<String> ALLOWED = Arrays.asList("receipt", "journal");
 }

@@ -39,7 +39,7 @@ public class MasterController
                                                                                   bangaloreEntryList,
                                                                                   hassanEntryList,
                                                                                   bankChargeEntryList);
-        reportWriter.writeReport(tallyResultList);
+        reportWriter.writeReport(recieptEntryList, bangaloreEntryList, hassanEntryList, bankChargeEntryList, tallyResultList);
 
     }
 

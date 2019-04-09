@@ -2,6 +2,7 @@ package com.spiegel.io.write;
 
 import com.google.inject.Inject;
 
+import com.spiegel.interfaces.IRecordEntry;
 import com.spiegel.interfaces.ITallyEntry;
 import com.spiegel.pojos.RowSum;
 import com.spiegel.pojos.TalliedEntry;
@@ -33,7 +34,8 @@ public class ReportWriter
                         final BangaloreRowWriter bangaloreRowWriter,
                         final HassanRowWriter hassanRowWriter,
                         final BankChargesRowWriter bankChargesRowWriter,
-                        final TotalSumWriter totalSumWriter)
+                        final TotalSumWriter totalSumWriter,
+                        final StatisticsWriter statisticsWriter)
     {
         this.cellTextSupplier = cellTextSupplier;
         this.maxNumberSupplier = maxNumberSupplier;
@@ -43,14 +45,20 @@ public class ReportWriter
         this.hassanRowWriter = hassanRowWriter;
         this.bankChargesRowWriter = bankChargesRowWriter;
         this.totalSumWriter = totalSumWriter;
+        this.statisticsWriter = statisticsWriter;
     }
 
-    public void writeReport(final List<ITallyEntry> tallyEntryList)
+    public void writeReport(final List<IRecordEntry> recieptEntryList,
+                            final List<IRecordEntry> bangaloreEntryList,
+                            final List<IRecordEntry> hassanEntryList,
+                            final List<IRecordEntry> bankChargeEntryList,
+                            final List<ITallyEntry> tallyEntryList)
     {
         final HSSFWorkbook workbook = new HSSFWorkbook();
         final HSSFSheet talliedSheet = workbook.createSheet("Tallied");
         final HSSFSheet unTalliedSheet = workbook.createSheet("Untallied");
         final HSSFSheet duplicateSheet = workbook.createSheet("Duplicate");
+        final HSSFSheet statisticSheet = workbook.createSheet("Statistics");
         // 0=yes, 1=no, 2=cancel
         int legacySetting = JOptionPane.showConfirmDialog(null, "Do you want Printable Summary Report instead of Excel?");
         boolean printableReport = (0 == legacySetting) ? true : false;
@@ -59,6 +67,14 @@ public class ReportWriter
         writeHeaders(workbook, unTalliedSheet, printableReport);
         writeData(workbook, talliedSheet, unTalliedSheet, tallyEntryList, printableReport);
         duplicateWriter.writeDuplicateSheet(workbook, duplicateSheet, tallyEntryList);
+        statisticsWriter.writeStatisticSheet(workbook,
+                                             statisticSheet,
+                                             recieptEntryList,
+                                             bangaloreEntryList,
+                                             hassanEntryList,
+                                             bankChargeEntryList,
+                                             tallyEntryList);
+
         close(workbook);
     }
 
@@ -186,6 +202,7 @@ public class ReportWriter
     private final HassanRowWriter hassanRowWriter;
     private final BankChargesRowWriter bankChargesRowWriter;
     private final TotalSumWriter totalSumWriter;
+    private final StatisticsWriter statisticsWriter;
 
     private final DuplicateWriter duplicateWriter;
     private final MaxNumberSupplier maxNumberSupplier;
