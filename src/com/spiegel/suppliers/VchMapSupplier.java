@@ -20,7 +20,16 @@ public class VchMapSupplier
             {
                 if (entry.getVchTokens().size() > 1)
                 {
-                    vchMap.put(((RecieptEntry) entry).getVchNo(), Lists.newArrayList(entry));
+                    final RecieptEntry recieptEntry = (RecieptEntry) entry;
+                    if (vchMap.containsKey(recieptEntry.getVchNo()))
+                    {
+                        final List<IRecordEntry> entries = vchMap.get(recieptEntry.getVchNo());
+                        entries.add(entry);
+                    }
+                    else
+                    {
+                        vchMap.put(((RecieptEntry) entry).getVchNo(), Lists.newArrayList(entry));
+                    }
                     continue;
                 }
             }
@@ -28,7 +37,16 @@ public class VchMapSupplier
             {
                 if (entry.getVchTokens().size() > 1)
                 {
-                    vchMap.put(((BankChargeEntry) entry).getVchNo(), Lists.newArrayList(entry));
+                    final BankChargeEntry bankChargeEntry = (BankChargeEntry) entry;
+                    if (vchMap.containsKey(bankChargeEntry.getVchNo()))
+                    {
+                        final List<IRecordEntry> entries = vchMap.get(bankChargeEntry.getVchNo());
+                        entries.add(entry);
+                    }
+                    else
+                    {
+                        vchMap.put(bankChargeEntry.getVchNo(), Lists.newArrayList(entry));
+                    }
                     continue;
                 }
             }

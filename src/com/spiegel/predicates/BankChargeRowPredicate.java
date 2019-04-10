@@ -2,6 +2,7 @@ package com.spiegel.predicates;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -17,6 +18,11 @@ public class BankChargeRowPredicate implements Predicate<Row>
 
         We are not checking if Vch No. if valid : We want to capture the invalids as not tallied
          */
+
+        if (!Optional.ofNullable(row).map(rs -> row.getCell(4)).isPresent())
+        {
+            return false;
+        }
 
         if (CellType.STRING != row.getCell(4).getCellTypeEnum())
         {
