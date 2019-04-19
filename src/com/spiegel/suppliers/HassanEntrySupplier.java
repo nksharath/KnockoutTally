@@ -2,16 +2,18 @@ package com.spiegel.suppliers;
 
 import com.google.inject.Inject;
 
+import com.spiegel.pojos.CellExpectation;
 import com.spiegel.pojos.HassanEntry;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 
 public class HassanEntrySupplier
 {
     @Inject
-    public HassanEntrySupplier(final VchNoSupplier vchNoSupplier)
+    public HassanEntrySupplier(final VchNoSupplier vchNoSupplier,
+                               final CellObjectSupplier cellObjectSupplier)
     {
         this.vchNoSupplier = vchNoSupplier;
+        this.cellObjectSupplier = cellObjectSupplier;
     }
 
     public HassanEntry get(Row row)
@@ -21,22 +23,13 @@ public class HassanEntrySupplier
         Row : 0,    1,         , 2    , 3    , 4                , 5      , 6    , 7
          */
 
-        final String vchNo;
-        if (CellType.STRING == row.getCell(3).getCellTypeEnum())
-        {
-            vchNo = row.getCell(3).getStringCellValue();
-        }
-        else
-        {
-            vchNo = Double.toString(row.getCell(3).getNumericCellValue());
-        }
-
-        return new HassanEntry(row.getCell(2).getStringCellValue(),
-                               vchNo,
-                               vchNoSupplier.get(vchNo),
-                               row.getCell(5).getNumericCellValue(),
-                               row.getCell(6).getStringCellValue());
+        return new HassanEntry((String) cellObjectSupplier.get(row.getCell(2), CellExpectation.STRING),
+                               (String) cellObjectSupplier.get(row.getCell(3), CellExpectation.STRING),
+                               vchNoSupplier.get((String) cellObjectSupplier.get(row.getCell(3), CellExpectation.STRING)),
+                               (double) cellObjectSupplier.get(row.getCell(5), CellExpectation.NUMERIC),
+                               (String) cellObjectSupplier.get(row.getCell(6), CellExpectation.STRING));
     }
 
     private final VchNoSupplier vchNoSupplier;
+    private final CellObjectSupplier cellObjectSupplier;
 }
