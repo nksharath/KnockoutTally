@@ -21,6 +21,11 @@ public class CellObjectSupplier
                 return cell.getDateCellValue();
             }
 
+            if (CellType.STRING == cell.getCellTypeEnum() && cellExpectation == CellExpectation.DATE)
+            {
+                return new Date(cell.getStringCellValue());
+            }
+
             if (CellType.STRING == cell.getCellTypeEnum())
             {
                 return cell.getStringCellValue();
